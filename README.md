@@ -84,7 +84,7 @@ OPENRGB_DEVICE_FILTER=NZXT
 OPENRGB_DEVICE_FILTER=ASUS,NZXT
 ```
 
-Example: on one tested host, the motherboard appeared in OpenRGB as `ASUS PRIME Z590-P`.
+Example: a motherboard may appear in OpenRGB as `ASUS PRIME Z590-P`.
 
 2. Which ASUS addressable header the strip is connected to.
 
@@ -104,7 +104,7 @@ AURA_ADDRESSABLE_2_LEDS=120
 
 `0` means "do not use this header". A positive number means "resize this header to this LED count before writing color".
 
-Current working local setup:
+Example ASUS addressable setup:
 
 ```env
 OPENRGB_DEVICE_FILTER=ASUS
@@ -112,7 +112,7 @@ AURA_ADDRESSABLE_1_LEDS=0
 AURA_ADDRESSABLE_2_LEDS=120
 ```
 
-That example setup means the strip is being addressed as:
+In that example, the strip is addressed as:
 
 - OpenRGB device: `ASUS PRIME Z590-P`
 - Header: `Aura Addressable 2`
