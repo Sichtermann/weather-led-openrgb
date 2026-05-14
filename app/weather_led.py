@@ -114,19 +114,42 @@ def connect_openrgb() -> OpenRGBClient:
 
 
 def matching_devices(devices: Iterable, needle: str):
-    needle = needle.strip().lower()
-    if not needle:
+    filters = [item.strip().lower() for item in needle.split(",") if item.strip()]
+    if not filters:
         return list(devices)
-    return [device for device in devices if needle in device.name.lower()]
+    return [
+        device
+        for device in devices
+        if any(filter_text in device.name.lower() for filter_text in filters)
+    ]
+
+
+def configure_asus_addressable_zones(device) -> None:
+    zone_sizes = {
+        "Aura Addressable 1": int(os.getenv("AURA_ADDRESSABLE_1_LEDS", "0")),
+        "Aura Addressable 2": int(os.getenv("AURA_ADDRESSABLE_2_LEDS", "0")),
+    }
+
+    for zone in getattr(device, "zones", []):
+        configured_size = zone_sizes.get(zone.name, 0)
+        if configured_size <= 0:
+            continue
+        if len(zone.leds) == configured_size:
+            continue
+        logging.info("Resizing %s to %s LEDs", zone.name, configured_size)
+        zone.resize(configured_size)
 
 
 def set_device_color(device, color: RGBColor) -> None:
+    if device.name.startswith("ASUS "):
+        configure_asus_addressable_zones(device)
+
     modes = [mode.name.lower() for mode in getattr(device, "modes", [])]
 
-    for preferred in ("direct", "static", "solid color"):
+    for preferred in ("static", "solid color", "direct"):
         if preferred in modes:
             try:
-                device.set_mode(preferred)
+                device.set_mode(preferred, force=True)
                 break
             except Exception:
                 logging.debug("Mode %s failed on %s", preferred, device.name, exc_info=True)

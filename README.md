@@ -36,7 +36,8 @@ This machine already exposes an ASUS Aura USB controller as `0b05:19af`, which i
 ## Setup
 
 1. Copy `.env.example` to `.env`.
-2. Adjust `OPENRGB_DEVICE_FILTER` if you want to target a different device name.
+2. Adjust `OPENRGB_DEVICE_FILTER` if you want to target a different device name or comma-separated list of device names.
+3. If your tower LEDs are connected to an ASUS addressable header, set `AURA_ADDRESSABLE_1_LEDS` or `AURA_ADDRESSABLE_2_LEDS` to the actual LED count on that header.
 3. Start the stack:
 
 ```bash
@@ -55,9 +56,18 @@ docker compose exec weatherled python /app/list_devices.py
 docker compose exec weatherled python /app/weather_led.py --once
 ```
 
+6. If the tower strip stays on rainbow, probe the ASUS addressable headers:
+
+```bash
+docker compose exec weatherled python /app/probe_headers.py
+```
+
+Watch for which `Aura Addressable` header responds, then set `AURA_ADDRESSABLE_1_LEDS` or `AURA_ADDRESSABLE_2_LEDS` in `.env` to the closest LED count that worked.
+
 ## Notes
 
-- `OPENRGB_DEVICE_FILTER=ASUS` is the default because this host exposes the motherboard as `ASUS PRIME Z590-P` through OpenRGB.
+- `OPENRGB_DEVICE_FILTER=ASUS,NZXT` is the default so the stack will try both the motherboard controller and the separate NZXT controller on this host.
+- If your strip/fans are on `Aura Addressable 1` or `Aura Addressable 2`, OpenRGB needs the LED count before it can override rainbow on that header.
 - If no device matches, the app logs all detected device names so you can tighten the filter.
 - The OpenRGB container runs privileged and mounts `/dev` because hardware RGB access is not cleanly namespaced.
 
