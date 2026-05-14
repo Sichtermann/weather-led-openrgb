@@ -1,0 +1,26 @@
+services:
+  openrgb:
+    build:
+      context: ./openrgb
+    container_name: weatherled-openrgb
+    privileged: true
+    environment:
+      QT_QPA_PLATFORM: offscreen
+      OPENRGB_PORT: 6742
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    volumes:
+      - /dev:/dev
+    ports:
+      - "6742:6742"
+    restart: unless-stopped
+
+  weatherled:
+    build:
+      context: ./app
+    container_name: weatherled-app
+    depends_on:
+      - openrgb
+    env_file:
+      - .env
+    restart: unless-stopped
