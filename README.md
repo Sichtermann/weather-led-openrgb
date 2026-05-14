@@ -1,6 +1,6 @@
 # weatherLed
 
-Map Cologne's next-day weather forecast to your tower LEDs with Docker Compose.
+Map a location's next-day weather forecast to your tower LEDs with Docker Compose.
 
 ## What it does
 
@@ -9,11 +9,13 @@ Map Cologne's next-day weather forecast to your tower LEDs with Docker Compose.
 - Connects to an OpenRGB server and applies that color to matching devices.
 - Repeats on a configurable interval so the LED tracks forecast changes.
 
-Default location is Cologne, Germany:
+The location is configured through `.env`:
 
 - Latitude: `50.9375`
 - Longitude: `6.9603`
 - Timezone: `Europe/Berlin`
+
+Those values are only example defaults. Replace them with your own location.
 
 ## Color map
 
@@ -39,25 +41,26 @@ This machine already exposes an ASUS Aura USB controller as `0b05:19af`, which i
 1. Copy `.env.example` to `.env`.
 2. Adjust `OPENRGB_DEVICE_FILTER` if you want to target a different device name or comma-separated list of device names.
 3. If your tower LEDs are connected to an ASUS addressable header, set `AURA_ADDRESSABLE_1_LEDS` or `AURA_ADDRESSABLE_2_LEDS` to the actual LED count on that header.
-3. Start the stack:
+4. Set `LATITUDE`, `LONGITUDE`, and `TIMEZONE` for your location.
+5. Start the stack:
 
 ```bash
 docker compose up --build -d
 ```
 
-4. Inspect detected devices:
+6. Inspect detected devices:
 
 ```bash
 docker compose exec weatherled python /app/list_devices.py
 ```
 
-5. Trigger an immediate update:
+7. Trigger an immediate update:
 
 ```bash
 docker compose exec weatherled python /app/weather_led.py --once
 ```
 
-6. If the tower strip stays on rainbow, probe the ASUS addressable headers:
+8. If the tower strip stays on rainbow, probe the ASUS addressable headers:
 
 ```bash
 docker compose exec weatherled python /app/probe_headers.py
@@ -81,7 +84,7 @@ OPENRGB_DEVICE_FILTER=NZXT
 OPENRGB_DEVICE_FILTER=ASUS,NZXT
 ```
 
-On this host, the motherboard appears in OpenRGB as `ASUS PRIME Z590-P`.
+Example: on one tested host, the motherboard appeared in OpenRGB as `ASUS PRIME Z590-P`.
 
 2. Which ASUS addressable header the strip is connected to.
 
@@ -109,7 +112,7 @@ AURA_ADDRESSABLE_1_LEDS=0
 AURA_ADDRESSABLE_2_LEDS=120
 ```
 
-That means the strip is currently being addressed as:
+That example setup means the strip is being addressed as:
 
 - OpenRGB device: `ASUS PRIME Z590-P`
 - Header: `Aura Addressable 2`
@@ -117,7 +120,7 @@ That means the strip is currently being addressed as:
 
 ## Notes
 
-- `OPENRGB_DEVICE_FILTER=ASUS,NZXT` is the default so the stack will try both the motherboard controller and the separate NZXT controller on this host.
+- `.env.example` ships with example defaults, including Cologne coordinates and `OPENRGB_DEVICE_FILTER=ASUS,NZXT`. Adjust them to match your hardware and location.
 - If your strip/fans are on `Aura Addressable 1` or `Aura Addressable 2`, OpenRGB needs the LED count before it can override rainbow on that header.
 - If no device matches, the app logs all detected device names so you can tighten the filter.
 - The OpenRGB container runs privileged and mounts `/dev` because hardware RGB access is not cleanly namespaced.
