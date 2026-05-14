@@ -25,7 +25,7 @@ FORECAST_COLORS = {
     "clear": ForecastColor("clear", "clear sky", RGBColor(253, 184, 19)),
     "partly_cloudy": ForecastColor("partly_cloudy", "partly cloudy", RGBColor(111, 177, 255)),
     "cloudy": ForecastColor("cloudy", "cloudy or foggy", RGBColor(154, 165, 177)),
-    "rain": ForecastColor("rain", "drizzle or rain", RGBColor(46, 134, 222)),
+    "rain": ForecastColor("rain", "drizzle or rain", RGBColor(16, 64, 160)),
     "snow": ForecastColor("snow", "snow or freezing precipitation", RGBColor(190, 233, 255)),
     "storm": ForecastColor("storm", "thunderstorm", RGBColor(255, 94, 91)),
     "unknown": ForecastColor("unknown", "unknown weather", RGBColor(255, 255, 255)),

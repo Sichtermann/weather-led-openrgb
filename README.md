@@ -20,7 +20,7 @@ Default location is Cologne, Germany:
 - Clear: `RGB(253, 184, 19)` warm sun yellow
 - Partly cloudy: `RGB(111, 177, 255)` soft sky blue
 - Cloudy or fog: `RGB(154, 165, 177)` cool gray
-- Rain or drizzle: `RGB(46, 134, 222)` rain blue
+- Rain or drizzle: `RGB(16, 64, 160)` deep rain blue
 - Snow: `RGB(190, 233, 255)` icy white-blue
 - Thunderstorm: `RGB(255, 94, 91)` warning red
 - Unknown: `RGB(255, 255, 255)` white
