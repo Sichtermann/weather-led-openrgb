@@ -17,12 +17,13 @@ Default location is Cologne, Germany:
 
 ## Color map
 
-- Clear: warm sun yellow
-- Partly cloudy: soft sky blue
-- Cloudy or fog: cool gray
-- Rain or drizzle: deep rain blue
-- Snow: icy white-blue
-- Thunderstorm: warning red
+- Clear: `RGB(253, 184, 19)` warm sun yellow
+- Partly cloudy: `RGB(111, 177, 255)` soft sky blue
+- Cloudy or fog: `RGB(154, 165, 177)` cool gray
+- Rain or drizzle: `RGB(46, 134, 222)` rain blue
+- Snow: `RGB(190, 233, 255)` icy white-blue
+- Thunderstorm: `RGB(255, 94, 91)` warning red
+- Unknown: `RGB(255, 255, 255)` white
 
 ## Requirements
 
@@ -63,6 +64,56 @@ docker compose exec weatherled python /app/probe_headers.py
 ```
 
 Watch for which `Aura Addressable` header responds, then set `AURA_ADDRESSABLE_1_LEDS` or `AURA_ADDRESSABLE_2_LEDS` in `.env` to the closest LED count that worked.
+
+## Addressing the LEDs
+
+There are two separate things to configure:
+
+1. Which OpenRGB device to target.
+
+Use `OPENRGB_DEVICE_FILTER` in `.env`.
+
+Examples:
+
+```env
+OPENRGB_DEVICE_FILTER=ASUS
+OPENRGB_DEVICE_FILTER=NZXT
+OPENRGB_DEVICE_FILTER=ASUS,NZXT
+```
+
+On this host, the motherboard appears in OpenRGB as `ASUS PRIME Z590-P`.
+
+2. Which ASUS addressable header the strip is connected to.
+
+OpenRGB exposes two motherboard ARGB headers:
+
+- `Aura Addressable 1`
+- `Aura Addressable 2`
+
+The app can only control a header after it knows how many LEDs are attached to it.
+
+Configure that in `.env`:
+
+```env
+AURA_ADDRESSABLE_1_LEDS=0
+AURA_ADDRESSABLE_2_LEDS=120
+```
+
+`0` means "do not use this header". A positive number means "resize this header to this LED count before writing color".
+
+Current working local setup:
+
+```env
+OPENRGB_DEVICE_FILTER=ASUS
+AURA_ADDRESSABLE_1_LEDS=0
+AURA_ADDRESSABLE_2_LEDS=120
+```
+
+That means the strip is currently being addressed as:
+
+- OpenRGB device: `ASUS PRIME Z590-P`
+- Header: `Aura Addressable 2`
+- LED count: `120`
 
 ## Notes
 
